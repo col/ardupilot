@@ -171,11 +171,6 @@ static bool init_arm_motors()
     // set hover throttle
     motors.set_mid_throttle(g.throttle_mid);
 
-#if SPRAYER == ENABLED
-    // turn off sprayer's test if on
-    sprayer.test_pump(false);
-#endif
-
     // short delay to allow reading of rc inputs
     delay(30);
 

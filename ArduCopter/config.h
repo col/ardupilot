@@ -80,9 +80,7 @@
 
 // disable some features for APM1/APM2
 #if HAL_CPU_CLASS < HAL_CPU_CLASS_75
- # define PARACHUTE DISABLED
  # define AC_RALLY DISABLED
- # define EPM_ENABLED DISABLED
  # define CLI_ENABLED           DISABLED
  # define FRSKY_TELEM_ENABLED   DISABLED
  # define NAV_GUIDED            DISABLED
@@ -399,24 +397,6 @@
 //  Auto Tuning
 #ifndef AUTOTUNE_ENABLED
  # define AUTOTUNE_ENABLED  ENABLED
-#endif
-
-//////////////////////////////////////////////////////////////////////////////
-//  Crop Sprayer
-#ifndef SPRAYER
- # define SPRAYER  DISABLED
-#endif
-
-//////////////////////////////////////////////////////////////////////////////
-//	EPM cargo gripper
-#ifndef EPM_ENABLED
- # define EPM_ENABLED ENABLED
-#endif
-
-//////////////////////////////////////////////////////////////////////////////
-// Parachute release
-#ifndef PARACHUTE
- # define PARACHUTE ENABLED
 #endif
 
 //////////////////////////////////////////////////////////////////////////////

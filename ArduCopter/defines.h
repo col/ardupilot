@@ -43,15 +43,10 @@
 #define AUX_SWITCH_RESETTOARMEDYAW  12      // changes yaw to be same as when quad was armed
 #define AUX_SWITCH_SUPERSIMPLE_MODE 13      // change to simple mode in middle, super simple at top
 #define AUX_SWITCH_ACRO_TRAINER     14      // low = disabled, middle = leveled, high = leveled and limited
-#define AUX_SWITCH_SPRAYER          15      // enable/disable the crop sprayer
 #define AUX_SWITCH_AUTO             16      // change to auto flight mode
 #define AUX_SWITCH_AUTOTUNE         17      // auto tune
 #define AUX_SWITCH_LAND             18      // change to LAND flight mode
-#define AUX_SWITCH_EPM              19      // Operate the EPM cargo gripper low=off, middle=neutral, high=on
 #define AUX_SWITCH_EKF              20      // Enable NavEKF
-#define AUX_SWITCH_PARACHUTE_ENABLE 21      // Parachute enable/disable
-#define AUX_SWITCH_PARACHUTE_RELEASE 22     // Parachute release
-#define AUX_SWITCH_PARACHUTE_3POS   23      // Parachute disable, enable, release with 3 position switch
 #define AUX_SWITCH_MISSIONRESET     24      // Reset auto mission to start from first command
 #define AUX_SWITCH_ATTCON_FEEDFWD   25      // enable/disable the roll and pitch rate feed forward
 #define AUX_SWITCH_ATTCON_ACCEL_LIM 26      // enable/disable the roll, pitch and yaw accel limiting
@@ -298,12 +293,6 @@ enum FlipState {
 #define DATA_ACRO_TRAINER_DISABLED      43
 #define DATA_ACRO_TRAINER_LEVELING      44
 #define DATA_ACRO_TRAINER_LIMITED       45
-#define DATA_EPM_GRAB                   46
-#define DATA_EPM_RELEASE                47
-#define DATA_EPM_NEUTRAL                48  // deprecated
-#define DATA_PARACHUTE_DISABLED         49
-#define DATA_PARACHUTE_ENABLED          50
-#define DATA_PARACHUTE_RELEASED         51
 #define DATA_LANDING_GEAR_DEPLOYED      52
 #define DATA_LANDING_GEAR_RETRACTED     53
 
@@ -328,7 +317,6 @@ enum FlipState {
 #define ERROR_SUBSYSTEM_CRASH_CHECK         12
 #define ERROR_SUBSYSTEM_FLIP                13
 #define ERROR_SUBSYSTEM_AUTOTUNE            14
-#define ERROR_SUBSYSTEM_PARACHUTE           15
 #define ERROR_SUBSYSTEM_EKFINAV_CHECK       16
 #define ERROR_SUBSYSTEM_FAILSAFE_EKFINAV    17
 #define ERROR_SUBSYSTEM_BARO                18
@@ -354,8 +342,6 @@ enum FlipState {
 #define ERROR_CODE_FLIP_ABANDONED           2
 // subsystem specific error codes -- autotune
 #define ERROR_CODE_AUTOTUNE_BAD_GAINS       2
-// parachute failed to deploy because of low altitude
-#define ERROR_CODE_PARACHUTE_TOO_LOW        2
 // EKF check definitions
 #define ERROR_CODE_EKFINAV_CHECK_BAD_VARIANCE       2
 #define ERROR_CODE_EKFINAV_CHECK_VARIANCE_CLEARED   0

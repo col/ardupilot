@@ -871,18 +871,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Path: ../libraries/AP_Relay/AP_Relay.cpp
     GOBJECT(relay,                  "RELAY_", AP_Relay),
 
-#if EPM_ENABLED == ENABLED
-	// @Group: EPM_
-    // @Path: ../libraries/AP_EPM/AP_EPM.cpp
-    GOBJECT(epm,            "EPM_", AP_EPM),
-#endif
-
-#if PARACHUTE == ENABLED
-	// @Group: CHUTE_
-    // @Path: ../libraries/AP_Parachute/AP_Parachute.cpp
-    GOBJECT(parachute,		"CHUTE_", AP_Parachute),
-#endif
-
     // @Group: LGR_
     // @Path: ../libraries/AP_LandingGear/AP_LandingGear.cpp
     GOBJECT(landinggear,    "LGR_", AP_LandingGear),
@@ -952,12 +940,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Group: BRD_
     // @Path: ../libraries/AP_BoardConfig/AP_BoardConfig.cpp
     GOBJECT(BoardConfig,            "BRD_",       AP_BoardConfig),
-
-#if SPRAYER == ENABLED
-    // @Group: SPRAY_
-    // @Path: ../libraries/AC_Sprayer/AC_Sprayer.cpp
-    GOBJECT(sprayer,                "SPRAY_",       AC_Sprayer),
-#endif
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
     GOBJECT(sitl, "SIM_", SITL),

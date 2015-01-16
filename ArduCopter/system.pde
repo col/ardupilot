@@ -131,11 +131,6 @@ static void init_ardupilot()
 
     BoardConfig.init();
 
-    // init EPM cargo gripper
-#if EPM_ENABLED == ENABLED
-    epm.init();
-#endif
-
     // initialise notify system
     // disable external leds if epm is enabled because of pin conflict on the APM
     notify.init(true);

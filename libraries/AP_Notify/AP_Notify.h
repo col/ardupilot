@@ -63,7 +63,6 @@ public:
         uint16_t failsafe_radio     : 1;    // 1 if radio failsafe
         uint16_t failsafe_battery   : 1;    // 1 if battery failsafe
         uint16_t failsafe_gps       : 1;    // 1 if gps failsafe
-        uint16_t parachute_release  : 1;    // 1 if parachute is being released
         uint16_t ekf_bad            : 1;    // 1 if ekf is reporting problems
 
         // additional flags

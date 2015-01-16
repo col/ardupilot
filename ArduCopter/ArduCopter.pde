@@ -146,15 +146,6 @@
 #include <AP_BattMonitor.h>     // Battery monitor library
 #include <AP_BoardConfig.h>     // board configuration library
 #include <AP_Frsky_Telem.h>
-#if SPRAYER == ENABLED
-#include <AC_Sprayer.h>         // crop sprayer library
-#endif
-#if EPM_ENABLED == ENABLED
-#include <AP_EPM.h>				// EPM cargo gripper stuff
-#endif
-#if PARACHUTE == ENABLED
-#include <AP_Parachute.h>		// Parachute release library
-#endif
 #include <AP_LandingGear.h>     // Landing Gear library
 #include <AP_Terrain.h>
 
@@ -691,27 +682,6 @@ AP_Rally rally(ahrs);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-// Crop Sprayer
-////////////////////////////////////////////////////////////////////////////////
-#if SPRAYER == ENABLED
-static AC_Sprayer sprayer(&inertial_nav);
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
-// EPM Cargo Griper
-////////////////////////////////////////////////////////////////////////////////
-#if EPM_ENABLED == ENABLED
-static AP_EPM epm;
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
-// Parachute release
-////////////////////////////////////////////////////////////////////////////////
-#if PARACHUTE == ENABLED
-static AP_Parachute parachute(relay);
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
 // Landing Gear Controller
 ////////////////////////////////////////////////////////////////////////////////
 static AP_LandingGear landinggear;
@@ -791,9 +761,6 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 #if FRSKY_TELEM_ENABLED == ENABLED
     { telemetry_send,       80,     10 },	
 #endif
-#if EPM_ENABLED == ENABLED
-    { epm_update,           40,     10 },
-#endif
 #ifdef USERHOOK_FASTLOOP
     { userhook_FastLoop,     4,     10 },
 #endif
@@ -862,9 +829,6 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { read_receiver_rssi,   10,      50 },
 #if FRSKY_TELEM_ENABLED == ENABLED
     { telemetry_send,       20,     100 },	
-#endif
-#if EPM_ENABLED == ENABLED
-    { epm_update,           10,      20 },
 #endif
 #ifdef USERHOOK_FASTLOOP
     { userhook_FastLoop,     1,    100  },
@@ -1109,10 +1073,6 @@ static void three_hz_loop()
     // check if we have breached a fence
     fence_check();
 #endif // AC_FENCE_ENABLED
-
-#if SPRAYER == ENABLED
-    sprayer.update();
-#endif
 
     update_events();
 

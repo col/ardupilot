@@ -117,11 +117,7 @@ static void init_aux_switches()
         case AUX_SWITCH_RESETTOARMEDYAW:
         case AUX_SWITCH_SUPERSIMPLE_MODE:
         case AUX_SWITCH_ACRO_TRAINER:
-        case AUX_SWITCH_EPM:
-        case AUX_SWITCH_SPRAYER:
         case AUX_SWITCH_EKF:
-        case AUX_SWITCH_PARACHUTE_ENABLE:
-        case AUX_SWITCH_PARACHUTE_3POS:	    // we trust the vehicle will be disarmed so even if switch is in release position the chute will not release
         case AUX_SWITCH_RETRACT_MOUNT:
         case AUX_SWITCH_MISSIONRESET:
         case AUX_SWITCH_ATTCON_FEEDFWD:
@@ -140,11 +136,7 @@ static void init_aux_switches()
         case AUX_SWITCH_RESETTOARMEDYAW:
         case AUX_SWITCH_SUPERSIMPLE_MODE:
         case AUX_SWITCH_ACRO_TRAINER:
-        case AUX_SWITCH_EPM:
-        case AUX_SWITCH_SPRAYER:
         case AUX_SWITCH_EKF:
-        case AUX_SWITCH_PARACHUTE_ENABLE:
-        case AUX_SWITCH_PARACHUTE_3POS:     // we trust the vehicle will be disarmed so even if switch is in release position the chute will not release
         case AUX_SWITCH_RETRACT_MOUNT:
         case AUX_SWITCH_MISSIONRESET:
         case AUX_SWITCH_ATTCON_FEEDFWD:
@@ -318,27 +310,6 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
                     break;
             }
             break;
-#if EPM_ENABLED == ENABLED
-        case AUX_SWITCH_EPM:
-            switch(ch_flag) {
-                case AUX_SWITCH_LOW:
-                    epm.release();
-                    Log_Write_Event(DATA_EPM_RELEASE);
-                    break;
-                case AUX_SWITCH_HIGH:
-                    epm.grab();
-                    Log_Write_Event(DATA_EPM_GRAB);
-                    break;
-            }
-            break;
-#endif
-#if SPRAYER == ENABLED
-        case AUX_SWITCH_SPRAYER:
-            sprayer.enable(ch_flag == AUX_SWITCH_HIGH);
-            // if we are disarmed the pilot must want to test the pump
-            sprayer.test_pump((ch_flag == AUX_SWITCH_HIGH) && !motors.armed());
-            break;
-#endif
 
         case AUX_SWITCH_AUTO:
             if (ch_flag == AUX_SWITCH_HIGH) {
@@ -384,37 +355,6 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
 #if AP_AHRS_NAVEKF_AVAILABLE
     case AUX_SWITCH_EKF:
         ahrs.set_ekf_use(ch_flag==AUX_SWITCH_HIGH);
-        break;
-#endif
-
-#if PARACHUTE == ENABLED
-    case AUX_SWITCH_PARACHUTE_ENABLE:
-        // Parachute enable/disable
-        parachute.enabled(ch_flag == AUX_SWITCH_HIGH);
-        break;
-
-    case AUX_SWITCH_PARACHUTE_RELEASE:
-        if (ch_flag == AUX_SWITCH_HIGH) {
-            parachute_manual_release();
-        }
-        break;
-
-    case AUX_SWITCH_PARACHUTE_3POS:
-        // Parachute disable, enable, release with 3 position switch
-        switch (ch_flag) {
-            case AUX_SWITCH_LOW:
-                parachute.enabled(false);
-                Log_Write_Event(DATA_PARACHUTE_DISABLED);
-                break;
-            case AUX_SWITCH_MIDDLE:
-                parachute.enabled(true);
-                Log_Write_Event(DATA_PARACHUTE_ENABLED);
-                break;
-            case AUX_SWITCH_HIGH:
-                parachute.enabled(true);
-                parachute_manual_release();
-                break;
-        }
         break;
 #endif
 

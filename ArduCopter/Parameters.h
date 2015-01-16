@@ -67,17 +67,11 @@ public:
         // relay object
         k_param_relay,
 
-        // EPM object
-        k_param_epm,
-
         // BoardConfig object
         k_param_BoardConfig,
 
         // GPS object
         k_param_gps,
-
-        // Parachute object
-        k_param_parachute,	// 17
 
         // Landing gear object
         k_param_landinggear,    // 18
@@ -99,7 +93,6 @@ public:
         k_param_sonar_gain,
         k_param_ch8_option,
         k_param_arming_check,
-        k_param_sprayer,
         k_param_angle_max,
         k_param_gps_hdop_good,
         k_param_battery,

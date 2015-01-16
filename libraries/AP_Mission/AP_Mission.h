@@ -111,12 +111,6 @@ public:
         float meters;           // distance
     };
 
-    // gripper command structure
-    struct PACKED Gripper_Command {
-        uint8_t num;            // gripper number
-        uint8_t action;         // action (0 = release, 1 = grab)
-    };
-
     // nav guided command
     struct PACKED Guided_Limits_Command {
         // max time is held in p1 field
@@ -155,9 +149,6 @@ public:
 
         // cam trigg distance
         Cam_Trigg_Distance cam_trigg_dist;
-
-        // do-gripper
-        Gripper_Command gripper;
 
         // do-guided-limits
         Guided_Limits_Command guided_limits;
