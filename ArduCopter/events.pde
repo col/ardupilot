@@ -18,44 +18,8 @@ static void failsafe_radio_on_event()
             // if throttle is zero OR vehicle is landed disarm motors
             if (ap.throttle_zero || ap.land_complete) {
                 init_disarm_motors();
-
-            // if failsafe_throttle is FS_THR_ENABLED_ALWAYS_LAND then land immediately
-            }else if(g.failsafe_throttle == FS_THR_ENABLED_ALWAYS_LAND) {
-                set_mode_land_with_pause();
-
-            // if far from home then RTL
-            }else if(home_distance > wp_nav.get_wp_radius()) {
-                // switch to RTL or if that fails, LAND
-                set_mode_RTL_or_land_with_pause();
-
-            // We have no GPS or are very close to home so we will land
-            }else{
-                set_mode_land_with_pause();
             }
             break;
-
-        case AUTO:
-            // if mission has not started AND vehicle is landed, disarm motors
-            if (!ap.auto_armed && ap.land_complete) {
-                init_disarm_motors();
-
-            // if failsafe_throttle is FS_THR_ENABLED_ALWAYS_LAND then land immediately
-            } else if(g.failsafe_throttle == FS_THR_ENABLED_ALWAYS_LAND) {
-                set_mode_land_with_pause();
-
-            // if failsafe_throttle is FS_THR_ENABLED_ALWAYS_RTL do RTL
-            } else if (g.failsafe_throttle == FS_THR_ENABLED_ALWAYS_RTL) {
-                if(home_distance > wp_nav.get_wp_radius()) {
-                    // switch to RTL or if that fails, LAND
-                    set_mode_RTL_or_land_with_pause();
-                }else{
-                    // We are very close to home so we will land
-                    set_mode_land_with_pause();
-                }
-            }
-            // failsafe_throttle must be FS_THR_ENABLED_CONTINUE_MISSION so no need to do anything
-            break;
-
         case LAND:
             // continue to land if battery failsafe is also active otherwise fall through to default handling
             if (g.failsafe_battery_enabled == FS_BATT_LAND && failsafe.battery) {
@@ -70,15 +34,10 @@ static void failsafe_radio_on_event()
 
             // if failsafe_throttle is FS_THR_ENABLED_ALWAYS_LAND then land immediately
             } else if(g.failsafe_throttle == FS_THR_ENABLED_ALWAYS_LAND) {
-                set_mode_land_with_pause();
-
-            // if far from home then RTL
-            }else if(home_distance > wp_nav.get_wp_radius()) {
-                // switch to RTL or if that fails, LAND
-                set_mode_RTL_or_land_with_pause();
+//                set_mode_land_with_pause(); // TODO: may need to bring this back. Probably a good feature to have.
             }else{
                 // We have no GPS or are very close to home so we will land
-                set_mode_land_with_pause();
+//                set_mode_land_with_pause();
             }
             break;
     }
@@ -114,13 +73,7 @@ static void failsafe_battery_event(void)
                 if (ap.throttle_zero || ap.land_complete) {
                     init_disarm_motors();
                 }else{
-                    // set mode to RTL or LAND
-                    if (g.failsafe_battery_enabled == FS_BATT_RTL && home_distance > wp_nav.get_wp_radius()) {
-                        // switch to RTL or if that fails, LAND
-                        set_mode_RTL_or_land_with_pause();
-                    }else{
-                        set_mode_land_with_pause();
-                    }
+//                    set_mode_land_with_pause();
                 }
                 break;
             case AUTO:
@@ -128,12 +81,8 @@ static void failsafe_battery_event(void)
                 if (!ap.auto_armed && ap.land_complete) {
                     init_disarm_motors();
 
-                // set mode to RTL or LAND
-                } else if (home_distance > wp_nav.get_wp_radius()) {
-                    // switch to RTL or if that fails, LAND
-                    set_mode_RTL_or_land_with_pause();
                 } else {
-                    set_mode_land_with_pause();
+//                    set_mode_land_with_pause();
                 }
                 break;
             default:
@@ -142,12 +91,8 @@ static void failsafe_battery_event(void)
                 if (ap.land_complete) {
                     init_disarm_motors();
 
-                // set mode to RTL or LAND
-                } else if (g.failsafe_battery_enabled == FS_BATT_RTL && home_distance > wp_nav.get_wp_radius()) {
-                    // switch to RTL or if that fails, LAND
-                    set_mode_RTL_or_land_with_pause();
                 } else {
-                    set_mode_land_with_pause();
+//                    set_mode_land_with_pause();
                 }
                 break;
         }
@@ -208,13 +153,13 @@ static void failsafe_gps_check()
             // alert pilot to mode change
             AP_Notify::events.failsafe_mode_change = 1;
         }else{
-            set_mode_land_with_pause();
+//            set_mode_land_with_pause();
         }
     }
 
     // if flight mode is LAND ensure it's not the GPS controlled LAND
     if (control_mode == LAND) {
-        land_do_not_use_GPS();
+//        land_do_not_use_GPS();
     }
 }
 
@@ -273,35 +218,22 @@ static void failsafe_gcs_check()
             // if throttle is zero disarm motors
             if (ap.throttle_zero) {
                 init_disarm_motors();
-            }else if(home_distance > wp_nav.get_wp_radius()) {
-                // switch to RTL or if that fails, LAND
-                set_mode_RTL_or_land_with_pause();
             }else{
                 // We have no GPS or are very close to home so we will land
-                set_mode_land_with_pause();
+//                set_mode_land_with_pause();
             }
             break;
         case AUTO:
             // if g.failsafe_gcs is 1 do RTL, 2 means continue with the mission
             if (g.failsafe_gcs == FS_GCS_ENABLED_ALWAYS_RTL) {
-                if (home_distance > wp_nav.get_wp_radius()) {
-                    // switch to RTL or if that fails, LAND
-                    set_mode_RTL_or_land_with_pause();
-                }else{
-                    // We are very close to home so we will land
-                    set_mode_land_with_pause();
-                }
+                // We are very close to home so we will land
+//                set_mode_land_with_pause();
             }
             // if failsafe_throttle is 2 (i.e. FS_THR_ENABLED_CONTINUE_MISSION) no need to do anything
             break;
         default:
-            if(home_distance > wp_nav.get_wp_radius()) {
-                // switch to RTL or if that fails, LAND
-                set_mode_RTL_or_land_with_pause();
-            }else{
-                // We have no GPS or are very close to home so we will land
-                set_mode_land_with_pause();
-            }
+            // We have no GPS or are very close to home so we will land
+//            set_mode_land_with_pause();
             break;
     }
 }
@@ -320,7 +252,7 @@ static void set_mode_RTL_or_land_with_pause()
     // attempt to switch to RTL, if this fails then switch to Land
     if (!set_mode(RTL)) {
         // set mode to land will trigger mode change notification to pilot
-        set_mode_land_with_pause();
+//        set_mode_land_with_pause();
     } else {
         // alert pilot to mode change
         AP_Notify::events.failsafe_mode_change = 1;

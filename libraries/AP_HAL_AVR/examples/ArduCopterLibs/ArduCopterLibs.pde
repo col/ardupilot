@@ -36,9 +36,7 @@
 #include <DataFlash.h>
 #include <AP_InertialNav.h>     // ArduPilot Mega inertial navigation library
 #include <GCS_MAVLink.h>
-#include <AP_Mission.h>
 #include <StorageManager.h>
-#include <AP_Terrain.h>
 #include <memcheck.h>
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_APM2

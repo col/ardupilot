@@ -23,12 +23,9 @@
 #include <AP_GPS.h>
 #include <DataFlash.h>
 #include <GCS_MAVLink.h>
-#include <AP_Mission.h>
 #include <StorageManager.h>
-#include <AP_Terrain.h>
 #include <AP_Declination.h> // ArduPilot Mega Declination Helper Library
 #include <AP_AHRS.h>
-#include <AP_NavEKF.h>
 #include <AP_Airspeed.h>
 #include <AP_Vehicle.h>
 #include <AP_ADC_AnalogSource.h>

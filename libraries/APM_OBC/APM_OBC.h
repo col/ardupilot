@@ -24,7 +24,6 @@
 
 #include <AP_Common.h>
 #include <AP_Param.h>
-#include <AP_Mission.h>
 #include <AP_Baro.h>
 #include <AP_GPS.h>
 #include <AP_RCMapper.h>
@@ -48,21 +47,21 @@ public:
     };
 
     // Constructor
-    APM_OBC(AP_Mission &_mission, AP_Baro &_baro, const AP_GPS &_gps, const RCMapper &_rcmap) :
-        mission(_mission),
-        baro(_baro),
-        gps(_gps),
-        rcmap(_rcmap),
-        _gps_loss_count(0),
-        _comms_loss_count(0)
-        {
-            AP_Param::setup_object_defaults(this, var_info);
-            
-            _state = STATE_PREFLIGHT;
-            _terminate.set(0);
-            
-            _saved_wp = 0;
-        }
+//    APM_OBC(AP_Mission &_mission, AP_Baro &_baro, const AP_GPS &_gps, const RCMapper &_rcmap) :
+//        mission(_mission),
+//        baro(_baro),
+//        gps(_gps),
+//        rcmap(_rcmap),
+//        _gps_loss_count(0),
+//        _comms_loss_count(0)
+//        {
+//            AP_Param::setup_object_defaults(this, var_info);
+//
+//            _state = STATE_PREFLIGHT;
+//            _terminate.set(0);
+//
+//            _saved_wp = 0;
+//        }
 
     // check that everything is OK
     void check(enum control_mode control_mode, uint32_t last_heartbeat_ms, bool geofence_breached, uint32_t last_valid_rc_ms);
@@ -80,7 +79,7 @@ public:
 private:
     enum state _state;
 
-    AP_Mission &mission;
+//    AP_Mission &mission;
     AP_Baro &baro;
     const AP_GPS &gps;
     const RCMapper &rcmap;
@@ -92,10 +91,6 @@ private:
     AP_Int8 _terminate_pin;
     AP_Int8 _terminate;
     AP_Int8 _terminate_action;
-
-    // waypoint numbers to jump to on failsafe conditions
-    AP_Int8 _wp_comms_hold;
-    AP_Int8 _wp_gps_loss;
 
     AP_Float _qnh_pressure;
     AP_Int32 _amsl_limit;

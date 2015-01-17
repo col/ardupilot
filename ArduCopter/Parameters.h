@@ -114,7 +114,6 @@ public:
         k_param_land_repositioning,
         k_param_sonar, // sonar object
         k_param_ekfcheck_thresh,
-        k_param_terrain,
         k_param_acro_expo,
         k_param_throttle_deadzone,
         k_param_optflow,

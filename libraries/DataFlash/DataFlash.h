@@ -404,22 +404,6 @@ struct PACKED log_Camera {
 };
 
 /*
-  terrain log structure
- */
-struct PACKED log_TERRAIN {
-    LOG_PACKET_HEADER;
-    uint32_t time_ms;
-    uint8_t status;
-    int32_t lat;
-    int32_t lng;
-    uint16_t spacing;
-    float terrain_height;
-    float current_height;
-    uint16_t pending;
-    uint16_t loaded;
-};
-
-/*
   UBlox logging
  */
 struct PACKED log_Ubx1 {
@@ -509,8 +493,6 @@ struct PACKED log_Esc {
       "EKF3","Icccccchhhc","TimeMS,IVN,IVE,IVD,IPN,IPE,IPD,IMX,IMY,IMZ,IVT" }, \
     { LOG_EKF4_MSG, sizeof(log_EKF4), \
       "EKF4","IcccccccbbBBH","TimeMS,SV,SP,SH,SMX,SMY,SMZ,SVT,OFN,EFE,FS,TS,SS" }, \
-    { LOG_TERRAIN_MSG, sizeof(log_TERRAIN), \
-      "TERR","IBLLHffHH","TimeMS,Status,Lat,Lng,Spacing,TerrH,CHeight,Pending,Loaded" }, \
     { LOG_UBX1_MSG, sizeof(log_Ubx1), \
       "UBX1", "IBHBBH",  "TimeMS,Instance,noisePerMS,jamInd,aPower,agcCnt" }, \
     { LOG_UBX2_MSG, sizeof(log_Ubx2), \

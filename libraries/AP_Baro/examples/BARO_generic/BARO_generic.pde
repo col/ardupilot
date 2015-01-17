@@ -15,9 +15,7 @@
 #include <AP_Vehicle.h>
 #include <DataFlash.h>
 #include <AP_InertialSensor.h>
-#include <AP_Mission.h>
 #include <StorageManager.h>
-#include <AP_Terrain.h>
 #include <AP_ADC.h>
 #include <AP_ADC_AnalogSource.h>
 #include <AP_AHRS.h>
@@ -31,7 +29,6 @@
 #include <AP_HAL_PX4.h>
 #include <AP_HAL_Empty.h>
 #include <AP_Rally.h>
-#include <AP_NavEKF.h>
 #include <AP_Scheduler.h>
 
 const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;

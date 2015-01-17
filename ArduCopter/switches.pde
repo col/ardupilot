@@ -119,7 +119,6 @@ static void init_aux_switches()
         case AUX_SWITCH_ACRO_TRAINER:
         case AUX_SWITCH_EKF:
         case AUX_SWITCH_RETRACT_MOUNT:
-        case AUX_SWITCH_MISSIONRESET:
         case AUX_SWITCH_ATTCON_FEEDFWD:
         case AUX_SWITCH_ATTCON_ACCEL_LIM:
         case AUX_SWITCH_RELAY:
@@ -138,7 +137,6 @@ static void init_aux_switches()
         case AUX_SWITCH_ACRO_TRAINER:
         case AUX_SWITCH_EKF:
         case AUX_SWITCH_RETRACT_MOUNT:
-        case AUX_SWITCH_MISSIONRESET:
         case AUX_SWITCH_ATTCON_FEEDFWD:
         case AUX_SWITCH_ATTCON_ACCEL_LIM:
         case AUX_SWITCH_RELAY:
@@ -200,68 +198,6 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
             }
             break;
 
-        case AUX_SWITCH_SAVE_WP:
-            // save waypoint when switch is brought high
-            if (ch_flag == AUX_SWITCH_HIGH) {
-
-                // do not allow saving new waypoints while we're in auto or disarmed
-                if(control_mode == AUTO || !motors.armed()) {
-                    return;
-                }
-
-				// do not allow saving the first waypoint with zero throttle
-				if((mission.num_commands() == 0) && (g.rc_3.control_in == 0)){
-					return;
-				}
-
-                // create new mission command
-                AP_Mission::Mission_Command cmd  = {};
-
-                // if the mission is empty save a takeoff command
-                if(mission.num_commands() == 0) {
-                    // set our location ID to 16, MAV_CMD_NAV_WAYPOINT
-                    cmd.id = MAV_CMD_NAV_TAKEOFF;
-                    cmd.content.location.options = 0;
-                    cmd.p1 = 0;
-                    cmd.content.location.lat = 0;
-                    cmd.content.location.lng = 0;
-                    cmd.content.location.alt = max(current_loc.alt,100);
-
-                    // use the current altitude for the target alt for takeoff.
-                    // only altitude will matter to the AP mission script for takeoff.
-                    if(mission.add_cmd(cmd)) {
-                        // log event
-                        Log_Write_Event(DATA_SAVEWP_ADD_WP);
-                    }
-                }
-
-                // set new waypoint to current location
-                cmd.content.location = current_loc;
-
-                // if throttle is above zero, create waypoint command
-                if(g.rc_3.control_in > 0) {
-                    cmd.id = MAV_CMD_NAV_WAYPOINT;
-                }else{
-					// with zero throttle, create LAND command
-                    cmd.id = MAV_CMD_NAV_LAND;
-                }
-
-                // save command
-                if(mission.add_cmd(cmd)) {
-                    // log event
-                    Log_Write_Event(DATA_SAVEWP_ADD_WP);
-                }
-            }
-            break;
-
-#if CAMERA == ENABLED
-        case AUX_SWITCH_CAMERA_TRIGGER:
-            if (ch_flag == AUX_SWITCH_HIGH) {
-                do_take_picture();
-            }
-            break;
-#endif
-
         case AUX_SWITCH_SONAR:
             // enable or disable the sonar
 #if CONFIG_SONAR == ENABLED
@@ -273,18 +209,6 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
 #endif
             break;
 
-#if AC_FENCE == ENABLED
-        case AUX_SWITCH_FENCE:
-            // enable or disable the fence
-            if (ch_flag == AUX_SWITCH_HIGH) {
-                fence.enable(true);
-                Log_Write_Event(DATA_FENCE_ENABLE);
-            }else{
-                fence.enable(false);
-                Log_Write_Event(DATA_FENCE_DISABLE);
-            }
-            break;
-#endif
         // To-Do: add back support for this feature
         //case AUX_SWITCH_RESETTOARMEDYAW:
         //    if (ch_flag == AUX_SWITCH_HIGH) {
@@ -357,12 +281,6 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
         ahrs.set_ekf_use(ch_flag==AUX_SWITCH_HIGH);
         break;
 #endif
-
-    case AUX_SWITCH_MISSIONRESET:
-        if (ch_flag == AUX_SWITCH_HIGH) {
-            mission.reset();
-        }
-        break;
 
     case AUX_SWITCH_ATTCON_FEEDFWD:
         // enable or disable feed forward

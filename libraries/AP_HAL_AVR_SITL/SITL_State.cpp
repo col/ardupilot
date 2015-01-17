@@ -69,7 +69,6 @@ AP_InertialSensor *SITL_State::_ins;
 SITLScheduler *SITL_State::_scheduler;
 AP_Compass_HIL *SITL_State::_compass;
 OpticalFlow *SITL_State::_optical_flow;
-AP_Terrain *SITL_State::_terrain;
 
 int SITL_State::_sitl_fd;
 SITL *SITL_State::_sitl;
@@ -216,7 +215,6 @@ void SITL_State::_sitl_setup(void)
 	_barometer = (AP_Baro *)AP_Param::find_object("GND_");
 	_ins = (AP_InertialSensor *)AP_Param::find_object("INS_");
 	_compass = (AP_Compass_HIL *)AP_Param::find_object("COMPASS_");
-	_terrain = (AP_Terrain *)AP_Param::find_object("TERRAIN_");
 	_optical_flow = (OpticalFlow *)AP_Param::find_object("FLOW");
 
     if (_sitl != NULL) {
@@ -679,20 +677,6 @@ float SITL_State::height_agl(void)
 	if (home_alt == -1 && _sitl->state.altitude > 0) {
         // remember home altitude as first non-zero altitude
 		home_alt = _sitl->state.altitude;
-    }
-
-    if (_terrain &&
-        _sitl->terrain_enable) {
-        // get height above terrain from AP_Terrain. This assumes
-        // AP_Terrain is working
-        float terrain_height_amsl;
-        struct Location location;
-        location.lat = _sitl->state.latitude*1.0e7;
-        location.lng = _sitl->state.longitude*1.0e7;
-
-        if (_terrain->height_amsl(location, terrain_height_amsl)) {
-            return _sitl->state.altitude - terrain_height_amsl;
-        }
     }
 
     // fall back to flat earth model

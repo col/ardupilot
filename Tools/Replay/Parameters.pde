@@ -30,10 +30,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Path: ../libraries/AP_Airspeed/AP_Airspeed.cpp
     GOBJECT(airspeed,                               "ARSPD_",   AP_Airspeed),
 
-    // @Group: EKF_
-    // @Path: ../libraries/AP_NavEKF/AP_NavEKF.cpp
-    GOBJECTN(ahrs.get_NavEKF(), NavEKF, "EKF_", NavEKF),
-
     // @Group: COMPASS_
     // @Path: ../libraries/AP_Compass/AP_Compass.cpp
     GOBJECT(compass, "COMPASS_", Compass),

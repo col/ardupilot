@@ -11,7 +11,6 @@
 #include <AP_Common.h>
 #include <GCS_MAVLink.h>
 #include <DataFlash.h>
-#include <AP_Mission.h>
 #include "../AP_BattMonitor/AP_BattMonitor.h"
 #include <stdint.h>
 #include <MAVLink_routing.h>
@@ -28,7 +27,6 @@ enum ap_message {
     MSG_EXTENDED_STATUS1,
     MSG_EXTENDED_STATUS2,
     MSG_NAV_CONTROLLER_OUTPUT,
-    MSG_CURRENT_WAYPOINT,
     MSG_VFR_HUD,
     MSG_RADIO_OUT,
     MSG_RADIO_IN,
@@ -38,7 +36,6 @@ enum ap_message {
     MSG_GPS_RAW,
     MSG_SYSTEM_TIME,
     MSG_SERVO_OUT,
-    MSG_NEXT_WAYPOINT,
     MSG_NEXT_PARAM,
     MSG_STATUSTEXT,
     MSG_LIMITS_STATUS,
@@ -48,7 +45,6 @@ enum ap_message {
     MSG_HWSTATUS,
     MSG_WIND,
     MSG_RANGEFINDER,
-    MSG_TERRAIN,
     MSG_BATTERY2,
     MSG_CAMERA_FEEDBACK,
     MSG_MOUNT_STATUS,
@@ -252,9 +248,6 @@ private:
     // vehicle specific message send function
     bool try_send_message(enum ap_message id);
 
-    void handle_guided_request(AP_Mission::Mission_Command &cmd);
-    void handle_change_alt_request(AP_Mission::Mission_Command &cmd);
-
     void handle_log_request_list(mavlink_message_t *msg, DataFlash_Class &dataflash);
     void handle_log_request_data(mavlink_message_t *msg, DataFlash_Class &dataflash);
     void handle_log_request_erase(mavlink_message_t *msg, DataFlash_Class &dataflash);
@@ -263,15 +256,6 @@ private:
     void handle_log_send(DataFlash_Class &dataflash);
     void handle_log_send_listing(DataFlash_Class &dataflash);
     bool handle_log_send_data(DataFlash_Class &dataflash);
-
-    void handle_mission_request_list(AP_Mission &mission, mavlink_message_t *msg);
-    void handle_mission_request(AP_Mission &mission, mavlink_message_t *msg);
-
-    void handle_mission_set_current(AP_Mission &mission, mavlink_message_t *msg);
-    void handle_mission_count(AP_Mission &mission, mavlink_message_t *msg);
-    void handle_mission_clear_all(AP_Mission &mission, mavlink_message_t *msg);
-    void handle_mission_write_partial_list(AP_Mission &mission, mavlink_message_t *msg);
-    void handle_mission_item(mavlink_message_t *msg, AP_Mission &mission);
 
     void handle_request_data_stream(mavlink_message_t *msg, bool save);
     void handle_param_request_list(mavlink_message_t *msg);

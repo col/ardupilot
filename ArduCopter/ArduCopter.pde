@@ -113,8 +113,6 @@
 #include <AP_Curve.h>           // Curve used to linearlise throttle pwm to thrust
 #include <AP_InertialSensor.h>  // ArduPilot Mega Inertial Sensor (accel & gyro) Library
 #include <AP_AHRS.h>
-#include <AP_NavEKF.h>
-#include <AP_Mission.h>         // Mission command library
 #include <AP_Rally.h>           // Rally point library
 #include <AC_PID.h>             // PID library
 #include <AC_HELI_PID.h>        // Heli specific Rate PID library
@@ -135,10 +133,7 @@
 #include <AP_Airspeed.h>        // needed for AHRS build
 #include <AP_Vehicle.h>         // needed for AHRS build
 #include <AP_InertialNav.h>     // ArduPilot Mega inertial navigation library
-#include <AC_WPNav.h>     		// ArduCopter waypoint navigation library
-#include <AC_Circle.h>          // circle navigation library
 #include <AP_Declination.h>     // ArduPilot Mega Declination Helper Library
-#include <AC_Fence.h>           // Arducopter Fence library
 #include <SITL.h>               // software in the loop support
 #include <AP_Scheduler.h>       // main loop scheduler
 #include <AP_RCMapper.h>        // RC input mapping library
@@ -147,7 +142,6 @@
 #include <AP_BoardConfig.h>     // board configuration library
 #include <AP_Frsky_Telem.h>
 #include <AP_LandingGear.h>     // Landing Gear library
-#include <AP_Terrain.h>
 
 // AP_HAL to Arduino compatibility layer
 #include "compat.h"
@@ -284,13 +278,6 @@ AP_AHRS_DCM ahrs(ins, barometer, gps);
 #if CONFIG_HAL_BOARD == HAL_BOARD_AVR_SITL
 SITL sitl;
 #endif
-
-// Mission library
-// forward declaration to keep compiler happy
-static bool start_command(const AP_Mission::Mission_Command& cmd);
-static bool verify_command(const AP_Mission::Mission_Command& cmd);
-static void exit_mission();
-AP_Mission mission(ahrs, &start_command, &verify_command, &exit_mission);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Optical flow sensor
@@ -622,8 +609,6 @@ AC_AttitudeControl attitude_control(ahrs, aparm, motors, g.p_stabilize_roll, g.p
 AC_PosControl pos_control(ahrs, inertial_nav, motors, attitude_control,
                         g.p_alt_hold, g.p_throttle_rate, g.pid_throttle_accel,
                         g.p_loiter_pos, g.pid_loiter_rate_lat, g.pid_loiter_rate_lon);
-static AC_WPNav wp_nav(inertial_nav, ahrs, pos_control, attitude_control);
-static AC_Circle circle_nav(inertial_nav, ahrs, pos_control);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Performance monitoring
@@ -668,13 +653,6 @@ static AP_Mount camera_mount(&current_loc, ahrs, 0);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-// AC_Fence library to reduce fly-aways
-////////////////////////////////////////////////////////////////////////////////
-#if AC_FENCE == ENABLED
-AC_Fence    fence(&inertial_nav);
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
 // Rally library
 ////////////////////////////////////////////////////////////////////////////////
 #if AC_RALLY == ENABLED
@@ -685,12 +663,6 @@ AP_Rally rally(ahrs);
 // Landing Gear Controller
 ////////////////////////////////////////////////////////////////////////////////
 static AP_LandingGear landinggear;
-
-////////////////////////////////////////////////////////////////////////////////
-// terrain handling
-#if AP_TERRAIN_AVAILABLE
-AP_Terrain terrain(ahrs, mission, rally);
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // function definitions to keep compiler from complaining about undeclared functions
@@ -733,7 +705,6 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { arm_motors_check,     40,      1 },
     { auto_trim,            40,     14 },
     { update_altitude,      40,    100 },
-    { run_nav_updates,       8,     80 },
     { update_thr_cruise,    40,     10 },
     { three_hz_loop,       133,      9 },
     { compass_accumulate,    8,     42 },
@@ -805,7 +776,6 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
     { arm_motors_check,     10,      10 },
     { auto_trim,            10,     140 },
     { update_altitude,      10,    1000 },
-    { run_nav_updates,       4,     800 },
     { update_thr_cruise,     1,      50 },
     { three_hz_loop,        33,      90 },
     { compass_accumulate,    2,     420 },
@@ -1038,9 +1008,6 @@ static void ten_hz_logging_loop()
     if (should_log(MASK_LOG_RCOUT)) {
         DataFlash.Log_Write_RCOUT();
     }
-    if (should_log(MASK_LOG_NTUN) && (mode_requires_GPS(control_mode) || landing_with_GPS())) {
-        Log_Write_Nav_Tuning();
-    }
 }
 
 // fifty_hz_logging_loop
@@ -1068,11 +1035,6 @@ static void three_hz_loop()
 {
     // check if we've lost contact with the ground station
     failsafe_gcs_check();
-
-#if AC_FENCE == ENABLED
-    // check if we have breached a fence
-    fence_check();
-#endif // AC_FENCE_ENABLED
 
     update_events();
 
@@ -1116,10 +1078,6 @@ static void one_hz_loop()
 #endif
 
     check_usb_mux();
-
-#if AP_TERRAIN_AVAILABLE
-    terrain.update();
-#endif
 }
 
 // called at 50hz
@@ -1198,12 +1156,6 @@ static void update_GPS(void)
                 gps.calculate_base_pos();
 
             }
-
-#if CAMERA == ENABLED
-            if (camera.update_location(current_loc) == true) {
-                do_take_picture();
-            }
-#endif
         }
     }
 
@@ -1387,11 +1339,6 @@ static void tuning(){
         g.pid_loiter_rate_lat.kD(tuning_value);
         break;
 
-    case CH6_WP_SPEED:
-        // set waypoint navigation horizontal speed to 0 ~ 1000 cm/s
-        wp_nav.set_speed_xy(g.rc_6.control_in);
-        break;
-
     // Acro roll pitch gain
     case CH6_ACRO_RP_KP:
         g.acro_rp_p = tuning_value;
@@ -1431,11 +1378,6 @@ static void tuning(){
     case CH6_DECLINATION:
         // set declination to +-20degrees
         compass.set_declination(ToRad((2.0f * g.rc_6.control_in - g.radio_tuning_high)/100.0f), false);     // 2nd parameter is false because we do not want to save to eeprom because this would have a performance impact
-        break;
-
-    case CH6_CIRCLE_RATE:
-        // set circle rate
-        circle_nav.set_rate(g.rc_6.control_in/25-20);   // allow approximately 45 degree turn rate in either direction
         break;
 
     case CH6_SONAR_GAIN:

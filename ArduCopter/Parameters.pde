@@ -426,24 +426,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Values: 0:Very Soft, 25:Soft, 50:Medium, 75:Crisp, 100:Very Crisp
     GSCALAR(rc_feel_rp, "RC_FEEL_RP",  RC_FEEL_RP_VERY_CRISP),
 
-#if POSHOLD_ENABLED == ENABLED
-    // @Param: PHLD_BRAKE_RATE
-    // @DisplayName: PosHold braking rate
-    // @Description: PosHold flight mode's rotation rate during braking in deg/sec
-    // @Units: deg/sec
-    // @Range: 4 12
-    // @User: Advanced
-    GSCALAR(poshold_brake_rate, "PHLD_BRAKE_RATE",  POSHOLD_BRAKE_RATE_DEFAULT),
-
-    // @Param: PHLD_BRAKE_ANGLE
-    // @DisplayName: PosHold braking angle max
-    // @Description: PosHold flight mode's max lean angle during braking in centi-degrees
-    // @Units: Centi-degrees
-    // @Range: 2000 4500
-    // @User: Advanced
-    GSCALAR(poshold_brake_angle_max, "PHLD_BRAKE_ANGLE",  POSHOLD_BRAKE_ANGLE_DEFAULT),
-#endif
-
     // @Param: LAND_REPOSITION
     // @DisplayName: Land repositioning
     // @Description: Enables user input during LAND mode, the landing phase of RTL, and auto mode landings.
@@ -887,14 +869,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Path: ../libraries/AP_InertialNav/AP_InertialNav.cpp
     GOBJECT(inertial_nav,           "INAV_",    AP_InertialNav),
 
-    // @Group: WPNAV_
-    // @Path: ../libraries/AC_WPNav/AC_WPNav.cpp
-    GOBJECT(wp_nav, "WPNAV_",       AC_WPNav),
-
-    // @Group: CIRCLE_
-    // @Path: ../libraries/AC_WPNav/AC_Circle.cpp
-    GOBJECT(circle_nav, "CIRCLE_",  AC_Circle),
-
 #if FRAME_CONFIG == HELI_FRAME
     // @Group: ATC_
     // @Path: ../libraries/AC_AttitudeControl/AC_AttitudeControl_Heli.cpp
@@ -958,12 +932,6 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Path: ../libraries/AP_Scheduler/AP_Scheduler.cpp
     GOBJECT(scheduler, "SCHED_", AP_Scheduler),
 
-#if AC_FENCE == ENABLED
-    // @Group: FENCE_
-    // @Path: ../libraries/AC_Fence/AC_Fence.cpp
-    GOBJECT(fence,      "FENCE_",   AC_Fence),
-#endif
-
 #if AC_RALLY == ENABLED
     // @Group: RALLY_
     // @Path: ../libraries/AP_Rally/AP_Rally.cpp
@@ -1021,26 +989,10 @@ const AP_Param::Info var_info[] PROGMEM = {
     // @Path: ../libraries/AP_RCMapper/AP_RCMapper.cpp
     GOBJECT(rcmap, "RCMAP_",        RCMapper),
 
-#if AP_AHRS_NAVEKF_AVAILABLE
-    // @Group: EKF_
-    // @Path: ../libraries/AP_NavEKF/AP_NavEKF.cpp
-    GOBJECTN(ahrs.get_NavEKF(), NavEKF, "EKF_", NavEKF),
-#endif
-
-    // @Group: MIS_
-    // @Path: ../libraries/AP_Mission/AP_Mission.cpp
-    GOBJECT(mission, "MIS_",       AP_Mission),
-
 #if CONFIG_SONAR == ENABLED
     // @Group: RNGFND
     // @Path: ../libraries/AP_RangeFinder/RangeFinder.cpp
     GOBJECT(sonar,   "RNGFND", RangeFinder),
-#endif
-
-#if AP_TERRAIN_AVAILABLE
-    // @Group: TERRAIN_
-    // @Path: ../libraries/AP_Terrain/AP_Terrain.cpp
-    GOBJECT(terrain,                "TERRAIN_", AP_Terrain),
 #endif
 
 #if OPTFLOW == ENABLED

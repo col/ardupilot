@@ -406,9 +406,6 @@
                <entry value="2097152" name="MAV_SYS_STATUS_AHRS">
                     <description>0x200000 AHRS subsystem health</description>
                </entry>
-               <entry value="4194304" name="MAV_SYS_STATUS_TERRAIN">
-                    <description>0x400000 Terrain subsystem health</description>
-               </entry>
           </enum>
           <enum name="MAV_FRAME">
                <entry value="0" name="MAV_FRAME_GLOBAL">
@@ -440,12 +437,6 @@
                </entry>
                <entry value="9" name="MAV_FRAME_BODY_OFFSET_NED">
                    <description>Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to avoid an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east.</description>
-               </entry>
-               <entry value="10" name="MAV_FRAME_GLOBAL_TERRAIN_ALT">
-                   <description>Global coordinate frame with above terrain level altitude. WGS84 coordinate system, relative altitude over terrain with respect to the waypoint coordinate. First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model.</description>
-               </entry>
-                <entry value="11" name="MAV_FRAME_GLOBAL_TERRAIN_ALT_INT">
-                   <description>Global coordinate frame with above terrain level altitude. WGS84 coordinate system, relative altitude over terrain with respect to the waypoint coordinate. First value / x: latitude in degrees*10e-7, second value / y: longitude in degrees*10e-7, third value / z: positive altitude in meters with 0 being at ground level in terrain model.</description>
                </entry>
           </enum>
           <enum name="MAVLINK_DATA_STREAM_TYPE">
@@ -1390,9 +1381,6 @@
               </entry>
               <entry value="256" name="MAV_PROTOCOL_CAPABILITY_SET_POSITION_TARGET_GLOBAL_INT">
                   <description>Autopilot supports commanding position and velocity targets in global scaled integers.</description>
-              </entry>
-              <entry value="512" name="MAV_PROTOCOL_CAPABILITY_TERRAIN">
-                  <description>Autopilot supports terrain protocol / data handling.</description>
               </entry>
           </enum>
           <enum name="MAV_ESTIMATOR_TYPE">

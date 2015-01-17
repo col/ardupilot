@@ -23,7 +23,6 @@
 #include <AP_ADC_AnalogSource.h>
 #include <AP_InertialSensor.h> // Inertial Sensor Library
 #include <AP_AHRS.h>         // ArduPilot Mega DCM Library
-#include <AP_NavEKF.h>
 #include <PID.h>            // PID library
 #include <RC_Channel.h>     // RC Channel Library
 #include <AP_RangeFinder.h>     // Range finder library
@@ -33,9 +32,7 @@
 #include <AP_Camera.h>          // Photo or video camera
 #include <AP_Airspeed.h>
 #include <AP_Vehicle.h>
-#include <AP_Mission.h>
 #include <AP_Rally.h>
-#include <AP_Terrain.h>
 #include <AP_BattMonitor.h>
 #include <AP_SpdHgtControl.h>
 #include <memcheck.h>

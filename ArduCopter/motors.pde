@@ -136,13 +136,6 @@ static bool init_arm_motors()
 
     initial_armed_bearing = ahrs.yaw_sensor;
 
-    // Reset home position
-    // -------------------
-    if (ap.home_is_set) {
-        init_home();
-        calc_distance_and_bearing();
-    }
-
     if(did_ground_start == false) {
         startup_ground(true);
         // final check that gyros calibrated successfully
@@ -302,14 +295,6 @@ static void pre_arm_checks(bool display_failure)
 
     // check GPS
     if (!pre_arm_gps_checks(display_failure)) {
-        return;
-    }
-
-    // check fence is initialised
-    if(!fence.pre_arm_check()) {
-        if (display_failure) {
-            gcs_send_text_P(SEVERITY_HIGH,PSTR("PreArm: check fence"));
-        }
         return;
     }
 
@@ -479,13 +464,6 @@ static bool pre_arm_gps_checks(bool display_failure)
     if (g.failsafe_gps_enabled == FS_GPS_LAND_EVEN_STABILIZE) {
         gps_required = true;
     }
-
-#if AC_FENCE == ENABLED
-    // if circular fence is enabled we need GPS
-    if ((fence.get_enabled_fences() & AC_FENCE_TYPE_CIRCLE) != 0) {
-        gps_required = true;
-    }
-#endif
 
     // return true if GPS is not required
     if (!gps_required) {
@@ -659,9 +637,6 @@ static void init_disarm_motors()
     // we are not in the air
     set_land_complete(true);
     set_land_complete_maybe(true);
-
-    // reset the mission
-    mission.reset();
 
     // setup fast AHRS gains to get right attitude
     ahrs.set_fast_gains(true);

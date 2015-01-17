@@ -43,11 +43,8 @@
 #include <AP_Baro_Glitch.h>
 #include <AP_InertialSensor.h>
 #include <AP_InertialNav.h>
-#include <AP_NavEKF.h>
-#include <AP_Mission.h>
 #include <AP_Rally.h>
 #include <AP_BattMonitor.h>
-#include <AP_Terrain.h>
 #include <AP_OpticalFlow.h>
 #include <Parameters.h>
 #include <stdio.h>

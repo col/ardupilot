@@ -174,10 +174,7 @@ APM_OBC::check(APM_OBC::control_mode mode, uint32_t last_heartbeat_ms, bool geof
         if (!gcs_link_ok) {
             GCS_MAVLINK::send_statustext_all(PSTR("State DATA_LINK_LOSS"));
             _state = STATE_DATA_LINK_LOSS;
-            if (_wp_comms_hold) {
-                _saved_wp = mission.get_current_nav_cmd().index;
-                mission.set_current_cmd(_wp_comms_hold);
-            }
+
             // if two events happen within 30s we consider it to be part of the same event
             if (now - _last_comms_loss_ms > 30*1000UL) {
                 _comms_loss_count++;
@@ -188,10 +185,6 @@ APM_OBC::check(APM_OBC::control_mode mode, uint32_t last_heartbeat_ms, bool geof
         if (!gps_lock_ok) {
             GCS_MAVLINK::send_statustext_all(PSTR("State GPS_LOSS"));
             _state = STATE_GPS_LOSS;
-            if (_wp_gps_loss) {
-                _saved_wp = mission.get_current_nav_cmd().index;
-                mission.set_current_cmd(_wp_gps_loss);
-            }
             // if two events happen within 30s we consider it to be part of the same event
             if (now - _last_gps_loss_ms > 30*1000UL) {
                 _gps_loss_count++;
@@ -212,13 +205,6 @@ APM_OBC::check(APM_OBC::control_mode mode, uint32_t last_heartbeat_ms, bool geof
         } else if (gcs_link_ok) {
             _state = STATE_AUTO;
             GCS_MAVLINK::send_statustext_all(PSTR("GCS OK"));
-            // we only return to the mission if we have not exceeded AFS_MAX_COM_LOSS
-            if (_saved_wp != 0 && 
-                (_max_comms_loss <= 0 || 
-                 _comms_loss_count <= _max_comms_loss)) {
-                mission.set_current_cmd(_saved_wp);            
-                _saved_wp = 0;
-            }
         }
         break;
 
@@ -233,13 +219,6 @@ APM_OBC::check(APM_OBC::control_mode mode, uint32_t last_heartbeat_ms, bool geof
         } else if (gps_lock_ok) {
             GCS_MAVLINK::send_statustext_all(PSTR("GPS OK"));
             _state = STATE_AUTO;
-            // we only return to the mission if we have not exceeded AFS_MAX_GPS_LOSS
-            if (_saved_wp != 0 &&
-                (_max_gps_loss <= 0 || 
-                 _gps_loss_count <= _max_gps_loss)) {
-                mission.set_current_cmd(_saved_wp);            
-                _saved_wp = 0;
-            }
         }
         break;
     }

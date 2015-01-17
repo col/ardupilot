@@ -22,9 +22,7 @@
 #include <Filter.h>
 #include <DataFlash.h>
 #include <GCS_MAVLink.h>
-#include <AP_Mission.h>
 #include <StorageManager.h>
-#include <AP_Terrain.h>
 #include <AP_AHRS.h>
 #include <AP_Airspeed.h>
 #include <AP_Vehicle.h>
@@ -33,7 +31,6 @@
 #include <AP_Scheduler.h>
 #include <AP_Declination.h>
 #include <AP_Notify.h>
-#include <AP_NavEKF.h>
 #if CONFIG_HAL_BOARD == HAL_BOARD_PX4
 
 #include <drivers/drv_accel.h>

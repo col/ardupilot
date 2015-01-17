@@ -37,55 +37,50 @@ static bool set_mode(uint8_t mode)
             #endif
             break;
 
-        case ALT_HOLD:
-            success = althold_init(ignore_checks);
-            break;
+//        case ALT_HOLD:
+//            success = althold_init(ignore_checks);
+//            break;
 
-        case AUTO:
-            success = auto_init(ignore_checks);
-            break;
+//        case AUTO:
+//            success = auto_init(ignore_checks);
+//            break;
 
-        case CIRCLE:
-            success = circle_init(ignore_checks);
-            break;
+//        case CIRCLE:
+//            success = circle_init(ignore_checks);
+//            break;
 
-        case LOITER:
-            success = loiter_init(ignore_checks);
-            break;
+//        case LOITER:
+//            success = loiter_init(ignore_checks);
+//            break;
 
-        case GUIDED:
-            success = guided_init(ignore_checks);
-            break;
+//        case GUIDED:
+//            success = guided_init(ignore_checks);
+//            break;
 
-        case LAND:
-            success = land_init(ignore_checks);
-            break;
+            // TODO: probably still need this.
+//        case LAND:
+//            success = land_init(ignore_checks);
+//            break;
 
-        case RTL:
-            success = rtl_init(ignore_checks);
-            break;
+//        case RTL:
+//            success = rtl_init(ignore_checks);
+//            break;
 
-        case DRIFT:
-            success = drift_init(ignore_checks);
-            break;
+//        case DRIFT:
+//            success = drift_init(ignore_checks);
+//            break;
 
-        case SPORT:
-            success = sport_init(ignore_checks);
-            break;
+//        case SPORT:
+//            success = sport_init(ignore_checks);
+//            break;
 
-        case FLIP:
-            success = flip_init(ignore_checks);
-            break;
+//        case FLIP:
+//            success = flip_init(ignore_checks);
+//            break;
 
 #if AUTOTUNE_ENABLED == ENABLED
         case AUTOTUNE:
             success = autotune_init(ignore_checks);
-            break;
-#endif
-
-#if POSHOLD_ENABLED == ENABLED
-        case POSHOLD:
-            success = poshold_init(ignore_checks);
             break;
 #endif
 
@@ -100,13 +95,6 @@ static bool set_mode(uint8_t mode)
         exit_mode(control_mode, mode);
         control_mode = mode;
         Log_Write_Mode(control_mode);
-
-#if AC_FENCE == ENABLED
-        // pilot requested flight mode change during a fence breach indicates pilot is attempting to manually recover
-        // this flight mode change could be automatic (i.e. fence, battery, GPS or GCS failsafe)
-        // but it should be harmless to disable the fence temporarily in these situations as well
-        fence.manual_recovery_start();
-#endif
     }else{
         // Log error that we failed to enter desired flight mode
         Log_Write_Error(ERROR_SUBSYSTEM_FLIGHT_MODE,mode);
@@ -141,37 +129,37 @@ static void update_flight_mode()
             #endif
             break;
 
-        case ALT_HOLD:
-            althold_run();
-            break;
+//        case ALT_HOLD:
+//            althold_run();
+//            break;
 
-        case AUTO:
-            auto_run();
-            break;
+//        case AUTO:
+//            auto_run();
+//            break;
 
-        case CIRCLE:
-            circle_run();
-            break;
+//        case CIRCLE:
+//            circle_run();
+//            break;
 
-        case LOITER:
-            loiter_run();
-            break;
+//        case LOITER:
+//            loiter_run();
+//            break;
 
-        case GUIDED:
-            guided_run();
-            break;
+//        case GUIDED:
+//            guided_run();
+//            break;
 
-        case LAND:
-            land_run();
-            break;
+//        case LAND:
+//            land_run();
+//            break;
 
-        case RTL:
-            rtl_run();
-            break;
+//        case RTL:
+//            rtl_run();
+//            break;
 
-        case DRIFT:
-            drift_run();
-            break;
+//        case DRIFT:
+//            drift_run();
+//            break;
 
         case SPORT:
             sport_run();
@@ -187,11 +175,6 @@ static void update_flight_mode()
             break;
 #endif
 
-#if POSHOLD_ENABLED == ENABLED
-        case POSHOLD:
-            poshold_run();
-            break;
-#endif
     }
 }
 
@@ -206,9 +189,6 @@ static void exit_mode(uint8_t old_control_mode, uint8_t new_control_mode)
 
     // stop mission when we leave auto mode
     if (old_control_mode == AUTO) {
-        if (mission.state() == AP_Mission::MISSION_RUNNING) {
-            mission.stop();
-        }
 #if MOUNT == ENABLED
         camera_mount.set_mode_to_default();
 #endif  // MOUNT == ENABLED

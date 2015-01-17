@@ -151,16 +151,6 @@ static void failsafe_ekf_event()
     // EKF failsafe event has occurred
     failsafe.ekf = true;
     Log_Write_Error(ERROR_SUBSYSTEM_FAILSAFE_EKFINAV, ERROR_CODE_FAILSAFE_OCCURRED);
-
-    // take action based on flight mode
-    if (mode_requires_GPS(control_mode)) {
-        set_mode_land_with_pause();
-    }
-
-    // if flight mode is LAND ensure it's not the GPS controlled LAND
-    if (control_mode == LAND) {
-        land_do_not_use_GPS();
-    }
 }
 
 // failsafe_ekf_off_event - actions to take when EKF failsafe is cleared

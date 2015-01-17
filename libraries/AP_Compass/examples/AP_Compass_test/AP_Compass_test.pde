@@ -28,12 +28,9 @@
 #include <AP_Baro.h>
 #include <AP_AHRS.h>
 #include <AP_Airspeed.h>
-#include <AP_NavEKF.h>
 #include <AP_ADC.h>
 #include <AP_ADC_AnalogSource.h>
 #include <AP_Notify.h>
-#include <AP_Mission.h>
-#include <AP_Terrain.h>
 #include <AP_Rally.h>
 
 const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;

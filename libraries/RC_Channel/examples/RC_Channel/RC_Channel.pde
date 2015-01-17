@@ -29,9 +29,7 @@
 #include <AP_Notify.h>
 #include <DataFlash.h>
 #include <GCS_MAVLink.h>
-#include <AP_Mission.h>
 #include <StorageManager.h>
-#include <AP_Terrain.h>
 #include <AP_Compass.h>
 #include <AP_Declination.h>
 #include <SITL.h>
@@ -40,7 +38,6 @@
 #include <AP_Airspeed.h>
 #include <AP_Vehicle.h>
 #include <AP_ADC_AnalogSource.h>
-#include <AP_NavEKF.h>
 #include <AP_Rally.h>
 #include <AP_Scheduler.h>
 #include <UARTDriver.h>
